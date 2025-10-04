@@ -1,888 +1,920 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tirth Shah - Interactive Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0a0a0a;
-            --primary-text: #e5e5e5;
-            --secondary-text: #a0a0a0;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --highlight-color: #4f46e5;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tirth Shah - Interactive Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0a0a0a;
+      --primary-text: #e5e5e5;
+      --secondary-text: #a0a0a0;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --highlight-color: #4f46e5;
+    }
 
-        ::selection {
-            background-color: var(--highlight-color);
-            color: var(--primary-text);
-        }
+    ::selection {
+      background-color: var(--highlight-color);
+      color: var(--primary-text);
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--primary-text);
-            cursor: none;
-            overflow-x: hidden;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--primary-text);
+      cursor: none;
+      overflow-x: hidden;
+    }
 
-        /* --- Preloader --- */
-        #preloader {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: var(--bg-color);
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-        }
-        #preloader.loaded {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .loader-ring {
-            display: inline-block;
-            position: relative;
-            width: 80px; height: 80px;
-        }
-        .loader-ring div {
-            box-sizing: border-box; display: block;
-            position: absolute; width: 64px; height: 64px;
-            margin: 8px; border: 4px solid var(--primary-text);
-            border-radius: 50%;
-            animation: loader-ring-anim 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-            border-color: var(--primary-text) transparent transparent transparent;
-        }
-        .loader-ring div:nth-child(1) { animation-delay: -0.45s; }
-        .loader-ring div:nth-child(2) { animation-delay: -0.3s; }
-        .loader-ring div:nth-child(3) { animation-delay: -0.15s; }
-        @keyframes loader-ring-anim {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    /* --- Preloader --- */
+    #preloader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: var(--bg-color);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+    }
+    #preloader.loaded {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .loader-ring {
+      display: inline-block;
+      position: relative;
+      width: 80px; height: 80px;
+    }
+    .loader-ring div {
+      box-sizing: border-box; display: block;
+      position: absolute; width: 64px; height: 64px;
+      margin: 8px; border: 4px solid var(--primary-text);
+      border-radius: 50%;
+      animation: loader-ring-anim 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      border-color: var(--primary-text) transparent transparent transparent;
+    }
+    .loader-ring div:nth-child(1) { animation-delay: -0.45s; }
+    .loader-ring div:nth-child(2) { animation-delay: -0.3s; }
+    .loader-ring div:nth-child(3) { animation-delay: -0.15s; }
+    @keyframes loader-ring-anim {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 
-        /* --- Aurora Background --- */
-        .aurora-background {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -2;
-            background: radial-gradient(ellipse at 20% 80%, rgba(79, 70, 229, 0.2) 0%, rgba(10,10,10,0) 40%),
-                        radial-gradient(ellipse at 80% 30%, rgba(0, 170, 255, 0.2) 0%, rgba(10,10,10,0) 40%),
-                        radial-gradient(ellipse at 90% 90%, rgba(139, 92, 246, 0.2) 0%, rgba(10,10,10,0) 40%);
-            animation: background-pan 20s linear infinite;
-        }
-        @keyframes background-pan {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
-        }
+    /* --- Aurora Background --- */
+    .aurora-background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -2;
+      background: radial-gradient(ellipse at 20% 80%, rgba(79, 70, 229, 0.2) 0%, rgba(10,10,10,0) 40%),
+            radial-gradient(ellipse at 80% 30%, rgba(0, 170, 255, 0.2) 0%, rgba(10,10,10,0) 40%),
+            radial-gradient(ellipse at 90% 90%, rgba(139, 92, 246, 0.2) 0%, rgba(10,10,10,0) 40%);
+      animation: background-pan 20s linear infinite;
+    }
+    @keyframes background-pan {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
 
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-        }
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
 
-        /* --- Upgraded Section Card --- */
-        .section-card {
-            background: linear-gradient(135deg, rgba(17, 17, 17, 0.6), rgba(17, 17, 17, 0.4));
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .section-card:before {
-            content: '';
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            top: var(--py, 0);
-            left: var(--px, 0);
-        }
-        .section-card:hover:before {
-            opacity: 1;
-        }
-        .section-card:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-        }
+    /* --- Upgraded Section Card --- */
+    .section-card {
+      background: linear-gradient(135deg, rgba(17, 17, 17, 0.6), rgba(17, 17, 17, 0.4));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .section-card:before {
+      content: '';
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      top: var(--py, 0);
+      left: var(--px, 0);
+    }
+    .section-card:hover:before {
+      opacity: 1;
+    }
+    .section-card:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
 
-        /* --- Scroll Animation --- */
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(30px) scale(0.98);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .fade-in-section.is-visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+    /* --- Scroll Animation --- */
+    .fade-in-section {
+      opacity: 0;
+      transform: translateY(30px) scale(0.98);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-in-section.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
 
-        /* --- Upgraded Project Card --- */
-        .project-card {
-            background-color: transparent;
-            min-height: 200px;
-            perspective: 1000px;
-            width: 100%;
-        }
-        .project-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            min-height: 200px;
-            transition: transform 0.8s, box-shadow 0.4s ease;
-            transform-style: preserve-3d;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .project-card:hover .project-card-inner {
-            transform: rotateY(180deg);
-            box-shadow: 0 15px 40px rgba(79, 70, 229, 0.3);
-        }
-        .project-card-front, .project-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 1.25rem;
-            border-radius: 0.75rem;
-            background: #111827;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-sizing: border-box;
-        }
-        .project-card-back {
-            transform: rotateY(180deg);
-            padding: 1.5rem;
-            text-align: center;
-            overflow: hidden;
-        }
-        .project-card-back p {
-            font-size: clamp(0.75rem, 2vw, 0.875rem);
-            line-height: 1.4;
-            overflow-wrap: break-word;
-            text-overflow: ellipsis;
-            max-height: 60%;
-            overflow: hidden;
-        }
-        .project-card-back .flex {
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        .project-card-back a {
-            font-size: clamp(0.75rem, 2vw, 0.875rem);
-            margin-top: 0.5rem;
-        }
+    /* --- Upgraded Project Card --- */
+    .project-card {
+      background-color: transparent;
+      min-height: 200px;
+      perspective: 1000px;
+      width: 100%;
+    }
+    .project-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
+      transition: transform 0.8s, box-shadow 0.4s ease;
+      transform-style: preserve-3d;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .project-card:hover .project-card-inner {
+      transform: rotateY(180deg);
+      box-shadow: 0 15px 40px rgba(79, 70, 229, 0.3);
+    }
+    .project-card-front, .project-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-sizing: border-box;
+    }
+    .project-card-back {
+      transform: rotateY(180deg);
+      padding: 1.5rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    .project-card-back p {
+      font-size: clamp(0.75rem, 2vw, 0.875rem);
+      line-height: 1.4;
+      overflow-wrap: break-word;
+      text-overflow: ellipsis;
+      max-height: 60%;
+      overflow: hidden;
+    }
+    .project-card-back .flex {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .project-card-back a {
+      font-size: clamp(0.75rem, 2vw, 0.875rem);
+      margin-top: 0.5rem;
+    }
 
-        /* --- Skill Badge Glow --- */
-        .skill-badge {
-            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-        }
-        .skill-badge:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 15px 2px var(--skill-color, var(--highlight-color));
-        }
+    /* --- Skill Badge Glow --- */
+    .skill-badge {
+      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    }
+    .skill-badge:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px 2px var(--skill-color, var(--highlight-color));
+    }
 
-        /* --- Upgraded Cursor --- */
-        #cursor-dot, #cursor-orb {
-            position: fixed;
-            top: 0; left: 0;
-            pointer-events: none;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 9999;
-            mix-blend-mode: difference;
-        }
-        #cursor-dot {
-            width: 8px; height: 8px;
-            background-color: white;
-            transition: transform 0.1s ease-out;
-        }
-        #cursor-orb {
-            width: 36px; height: 36px;
-            border: 1px solid white;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
-        }
-        #cursor-orb.is-hovering {
-            width: 50px; height: 50px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-color: var(--highlight-color);
-        }
+    /* --- Upgraded Cursor --- */
+    #cursor-dot, #cursor-orb {
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      mix-blend-mode: difference;
+    }
+    #cursor-dot {
+      width: 8px; height: 8px;
+      background-color: white;
+      transition: transform 0.1s ease-out;
+    }
+    #cursor-orb {
+      width: 36px; height: 36px;
+      border: 1px solid white;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+    }
+    #cursor-orb.is-hovering {
+      width: 50px; height: 50px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-color: var(--highlight-color);
+    }
 
-        /* --- Typing Animation --- */
-        .typing-cursor::after {
-            content: '|'; display: inline-block;
-            animation: blink 0.7s infinite; color: var(--primary-text);
-        }
-        @keyframes blink { 50% { opacity: 0; } }
+    /* --- Typing Animation --- */
+    .typing-cursor::after {
+      content: '|'; display: inline-block;
+      animation: blink 0.7s infinite; color: var(--primary-text);
+    }
+    @keyframes blink { 50% { opacity: 0; } }
 
-        /* --- Hero Section & Scroll Indicator --- */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-        }
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            width: 24px;
-            height: 40px;
-            border: 2px solid var(--secondary-text);
-            border-radius: 12px;
-        }
-        .scroll-indicator::before {
-            content: '';
-            position: absolute;
-            top: 8px; left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 8px;
-            background-color: var(--secondary-text);
-            border-radius: 2px;
-            animation: scroll-anim 2s infinite;
-        }
-        @keyframes scroll-anim {
-            0% { transform: translate(-50%, 0); opacity: 1; }
-            50% { transform: translate(-50%, 10px); opacity: 0; }
-            100% { transform: translate(-50%, 0); opacity: 1; }
-        }
+    /* --- Hero Section & Scroll Indicator --- */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      width: 24px;
+      height: 40px;
+      border: 2px solid var(--secondary-text);
+      border-radius: 12px;
+    }
+    .scroll-indicator::before {
+      content: '';
+      position: absolute;
+      top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 8px;
+      background-color: var(--secondary-text);
+      border-radius: 2px;
+      animation: scroll-anim 2s infinite;
+    }
+    @keyframes scroll-anim {
+      0% { transform: translate(-50%, 0); opacity: 1; }
+      50% { transform: translate(-50%, 10px); opacity: 0; }
+      100% { transform: translate(-50%, 0); opacity: 1; }
+    }
 
-        /* --- Floating Navbar --- */
-        #navbar {
-            position: fixed;
-            top: 50%;
-            left: 2rem;
-            transform: translateY(-50%) translateX(-120%);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            transition: transform 0.5s ease-in-out;
-        }
-        #navbar.visible {
-            transform: translateY(-50%) translateX(0);
-        }
-        .nav-link {
-            color: var(--secondary-text);
-            transition: color 0.3s ease, transform 0.3s ease;
-            position: relative;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary-text);
-            transform: scale(1.2);
-        }
-        .nav-link .tooltip {
-            position: absolute;
-            left: 150%;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #111827;
-            color: var(--primary-text);
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            pointer-events: none;
-        }
-        .nav-link:hover .tooltip {
-            opacity: 1;
-            visibility: visible;
-        }
+    /* --- Floating Navbar --- */
+    #navbar {
+      position: fixed;
+      top: 50%;
+      left: 2rem;
+      transform: translateY(-50%) translateX(-120%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: transform 0.5s ease-in-out;
+    }
+    #navbar.visible {
+      transform: translateY(-50%) translateX(0);
+    }
+    .nav-link {
+      color: var(--secondary-text);
+      transition: color 0.3s ease, transform 0.3s ease;
+      position: relative;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary-text);
+      transform: scale(1.2);
+    }
+    .nav-link .tooltip {
+      position: absolute;
+      left: 150%;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #111827;
+      color: var(--primary-text);
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      pointer-events: none;
+    }
+    .nav-link:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
 
-        @media (max-width: 640px) {
-            .project-card-back p {
-                font-size: 0.75rem;
-                line-height: 1.3;
-            }
-            .project-card-back a {
-                font-size: 0.75rem;
-            }
-        }
-    </style>
+    @media (max-width: 640px) {
+      .project-card-back p {
+        font-size: 0.75rem;
+        line-height: 1.3;
+      }
+      .project-card-back a {
+        font-size: 0.75rem;
+      }
+    }
+    
+    /* --- Certificate List Fix & Styling --- */
+    #certifications ul {
+      list-style: none; /* Remove default list style */
+      padding: 0; 
+    }
+    #certifications li {
+      position: relative;
+      margin-left: 1.5rem; /* Space for custom bullet */
+      padding-left: 0.5rem; 
+      break-inside: avoid; /* Prevent list items from breaking across columns */
+    }
+    #certifications li::before {
+      content: '•'; /* Custom bullet point */
+      color: var(--highlight-color);
+      font-weight: bold;
+      display: inline-block;
+      position: absolute;
+      left: -0.5rem; 
+      top: 0;
+      font-size: 1.25rem;
+      line-height: 1.5rem;
+    }
+    .cert-link {
+      color: var(--primary-text);
+      transition: color 0.2s ease;
+      display: block;
+    }
+    .cert-link:hover {
+      color: var(--highlight-color);
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body class="overflow-x-hidden">
 
-    <div id="preloader">
-        <div class="loader-ring"><div></div><div></div><div></div><div></div></div>
-    </div>
+  <div id="preloader">
+    <div class="loader-ring"><div></div><div></div><div></div><div></div></div>
+  </div>
 
-    <div id="cursor-dot"></div>
-    <div id="cursor-orb"></div>
-    <div class="aurora-background"></div>
-    <canvas id="bg-canvas"></canvas>
+  <div id="cursor-dot"></div>
+  <div id="cursor-orb"></div>
+  <div class="aurora-background"></div>
+  <canvas id="bg-canvas"></canvas>
 
-    <nav id="navbar">
-        <a href="#introduction" class="nav-link" data-section="introduction">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-            <span class="tooltip">Introduction</span>
-        </a>
-        <a href="#experience" class="nav-link" data-section="experience">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-            <span class="tooltip">Experience</span>
-        </a>
-        <a href="#skills" class="nav-link" data-section="skills">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-            <span class="tooltip">Skills</span>
-        </a>
-        <a href="#projects" class="nav-link" data-section="projects">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-            <span class="tooltip">Projects</span>
-        </a>
-         <a href="#contact" class="nav-link" data-section="contact">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-            <span class="tooltip">Contact</span>
-        </a>
-    </nav>
+  <nav id="navbar">
+    <a href="#introduction" class="nav-link" data-section="introduction">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+      <span class="tooltip">Introduction</span>
+    </a>
+    <a href="#experience" class="nav-link" data-section="experience">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+      <span class="tooltip">Experience</span>
+    </a>
+    <a href="#skills" class="nav-link" data-section="skills">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+      <span class="tooltip">Skills</span>
+    </a>
+    <a href="#projects" class="nav-link" data-section="projects">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+      <span class="tooltip">Projects</span>
+    </a>
+    <a href="#contact" class="nav-link" data-section="contact">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+      <span class="tooltip">Contact</span>
+    </a>
+  </nav>
 
-    <div class="hero px-4">
-        <header id="hero-header" style="perspective: 1000px;">
-            <div id="hero-content">
-                <h1 id="main-heading" class="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-white h-24 sm:h-28"></h1>
-                <p id="sub-heading" class="mt-4 text-lg sm:text-xl text-gray-400 h-8"></p>
-                <div class="mt-8 flex justify-center items-center flex-wrap gap-x-6 gap-y-4 text-3xl">
-                     <a href="https://github.com/tirth932" title="GitHub" target="_blank" class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110">
-                        <svg class="w-7 h-7" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                            <title>GitHub</title>
-                            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                        </svg>
-                    </a>
-                    <a href="https://www.linkedin.com/in/tirthshah2203/" title="LinkedIn" target="_blank" class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110">
-                        <svg class="w-7 h-7" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                            <title>LinkedIn</title>
-                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
-                        </svg>
-                    </a>
-                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=tirthshah29604@gmail.com" title="Email" class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110">
-                         <svg class="w-7 h-7" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                            <title>Email</title>
-                            <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/>
-                        </svg>
-                    </a>
+  <div class="hero px-4">
+    <header id="hero-header" style="perspective: 1000px;">
+      <div id="hero-content">
+        <h1 id="main-heading" class="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-white h-24 sm:h-28"></h1>
+        <p id="sub-heading" class="mt-4 text-lg sm:text-xl text-gray-400 h-8"></p>
+        <div class="mt-8 flex justify-center items-center flex-wrap gap-x-6 gap-y-4 text-3xl">
+          <a href="https://github.com/tirth932" title="GitHub" target="_blank" class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110">
+            <svg class="w-7 h-7" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <title>GitHub</title>
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/tirthshah2203/" title="LinkedIn" target="_blank" class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110">
+            <svg class="w-7 h-7" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <title>LinkedIn</title>
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
+            </svg>
+          </a>
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=tirthshah29604@gmail.com" title="Email" class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110">
+            <svg class="w-7 h-7" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <title>Email</title>
+              <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/>
+            </svg>
+          </a>
+        </div>
+        <div class="mt-10">
+          <a href="Tirth Shah - Resume.pdf" download="Tirth_Shah_Resume.pdf" class="magnetic-button border border-indigo-500 text-indigo-400 font-semibold px-8 py-3 rounded-lg hover:bg-indigo-500 hover:text-white transition-all duration-300 inline-block">
+            Download Resume
+          </a>
+        </div>
+      </div>
+    </header>
+    <div class="scroll-indicator"></div>
+  </div>
+
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+    <main id="main-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div id="introduction" class="scroll-target md:col-span-2 lg:col-span-3 section-card p-8 rounded-2xl fade-in-section">
+        <h2 class="text-3xl font-bold text-white mb-4">Introduction</h2>
+        <div class="text-gray-300 leading-relaxed space-y-4">
+          <p>Hi! I'm Tirth Shah, a Python & AI/ML developer with a passion for building intelligent, scalable solutions. I specialize in AI-driven applications and web development, combining cutting-edge technologies like Generative AI and cloud architectures with a deep commitment to creating impactful, data-driven products.</p>
+          <p>I'm always curious, always learning, and always building. From architecting RAG-based chatbots to automating complex data workflows, I enjoy the entire development lifecycle. When I'm not coding, you'll find me diving into the latest AI research, analyzing the stock market, or enjoying a game of cricket.</p>
+        </div>
+      </div>
+
+      <div id="education" class="scroll-target section-card p-8 rounded-2xl fade-in-section">
+        <h2 class="text-3xl font-bold text-white mb-4">Education</h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="font-semibold text-white">B.Tech, Computer Science</h3>
+            <p class="text-gray-400">L.J. Institute of Engineering & Technology (2022-Present)</p>
+            <p class="text-gray-500">CGPA: 8.75</p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-white">HSC</h3>
+            <p class="text-gray-400">Nirman High School (2021-2022)</p>
+             <p class="text-gray-500">72 percentile</p>
+          </div>
+           <div>
+            <h3 class="font-semibold text-white">SSC</h3>
+            <p class="text-gray-400">Nirman High School (2019-2020)</p>
+            <p class="text-gray-500">91 percentile</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="experience" class="scroll-target md:col-span-2 section-card p-8 rounded-2xl fade-in-section">
+        <h2 class="text-3xl font-bold text-white mb-4">Work Experience</h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="font-semibold text-white text-lg">Python & AI/ML Developer</h3>
+            <p class="text-gray-400">NicheTech Computer Solutions | Dec 2024 - Present</p>
+            <ul class="list-disc list-inside mt-2 text-gray-300 space-y-2">
+              <li>Spearheaded integration of OpenAI APIs to automate content summarization on Matrubharti, increasing content discovery by 30%.</li>
+              <li>Engineered chatbot systems and interactive dashboards for Roastea, enhancing customer engagement by 40%.</li>
+              <li>Architected and launched Trip Teller, a Django-based travel platform handling 5,000+ queries/month. Enhanced its RAG-based chat functionality by developing an advanced itinerary-planning chatbot using Groq, FastAPI, Langchain, and Huggingface Transformers to provide AI-driven travel recommendations.</li>
+              <li>Developed a web-scraping chatbot for the "Take Charge America" project to provide users with comprehensive information about the organization's services by extracting data directly from their website.</li>
+              <li>Spearheaded the integration of OpenAI APIs to automate content summarization on Matrubharti, increasing content discovery by 30%. </li>
+              <li>Automated PDF data ingestion to DynamoDB via AWS Lambda, reducing data processing time from hours to under 5 minutes. </li>
+              <li>Developed BSG, a secure event management platform in Golang capable of supporting 300+ user registrations.</li>
+              <li>Developed KeywordsClub, an SEO and content generation tool utilizing FastAPI and OpenAI. The application expands a single term into a comprehensive list of keywords and automates the creation of blog content to streamline marketing workflows.</li>
+              <li>Built a proprietary web-scraping chatbot for NicheTech to serve as an internal knowledge base, automating information retrieval and providing employees with on-demand access to company-wide information.</li>
+              <li>Engineered a specialized chatbot for Roastea's internal administrative and management teams by training a custom model to handle specific operational queries, improving internal workflow efficiency.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold text-white text-lg">AI Intern</h3>
+            <p class="text-gray-400">Tally Prime | Jun 2024 - Aug 2024</p>
+            <ul class="list-disc list-inside mt-2 text-gray-300 space-y-2">
+              <li>Automated generation of 500+ training invoices with advanced Excel scripting, expediting data prep by 60%.</li>
+              <li>Built modular Python tools to auto-populate invoice templates, cutting manual data entry by 90%.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="skills" class="scroll-target lg:col-span-3 section-card p-8 rounded-2xl fade-in-section">
+        <h2 class="text-3xl font-bold text-white mb-4">Technical Skills</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="font-semibold text-white mb-3">Languages & Frameworks</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#306998">Python</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#00ADD8">Golang</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#092E20">Django</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#009485">FastAPI</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#ffffff">Flask</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#F7DF1E">JavaScript</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold text-white mb-3">Tools & Platforms</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#FF9900">AWS</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#f1502f">Git</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#4DB33D">MongoDB</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#336791">PostgreSQL</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#00ff00">Groq</span>
+              <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#7B46FF">n8n</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold text-white mb-3">Domains</h3>
+            <div class="flex flex-wrap gap-2">
+             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#9C27B0">Generative AI</span>
+             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#F44336">Machine Learning</span>
+             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#4CAF50">OpenAI APIs</span>
+             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#4A148C">Deep Learning</span>
+             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#00BCD4">IoT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="projects" class="scroll-target lg:col-span-3 section-card p-8 rounded-2xl fade-in-section">
+        <h2 class="text-3xl font-bold text-white mb-6">Projects</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-card-front"><h3 class="text-xl font-bold text-white">TechGroove</h3></div>
+              <div class="project-card-back text-center">
+                <p class="text-gray-300">A full-stack MERN e-commerce platform with dynamic cart, product management, and secure backend integration for a modern shopping experience.</p>
+                <div class="flex justify-center gap-2 mt-4">
+                  <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">React</span>
+                  <span class="bg-green-900 text-green-300 text-xs font-semibold px-2.5 py-0.5 rounded">Node.js</span>
                 </div>
-                <div class="mt-10">
-                    <a href="Tirth Shah - Resume.pdf" download="Tirth_Shah_Resume.pdf" class="magnetic-button border border-indigo-500 text-indigo-400 font-semibold px-8 py-3 rounded-lg hover:bg-indigo-500 hover:text-white transition-all duration-300 inline-block">
-                        Download Resume
-                    </a>
+                <a href="https://github.com/tirth932/TechGroove" target="_blank" class="mt-4 text-indigo-400 hover:text-indigo-300 transition flex items-center justify-center gap-2">View Code <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-card-front"><h3 class="text-xl font-bold text-white">Digi Bank</h3></div>
+              <div class="project-card-back text-center">
+                <p class="text-gray-300">Full-stack banking app with Django and React for secure balance checks, loan applications, and service management with persistent data storage.</p>
+                <div class="flex justify-center gap-2 mt-4">
+                   <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">React</span>
+                   <span class="bg-green-900 text-green-300 text-xs font-semibold px-2.5 py-0.5 rounded">Django</span>
                 </div>
+                <a href="https://github.com/tirth932/digibank" target="_blank" class="mt-4 text-indigo-400 hover:text-indigo-300 transition flex items-center justify-center gap-2">View Code <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+              </div>
             </div>
-        </header>
-        <div class="scroll-indicator"></div>
-    </div>
-
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        <main id="main-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div id="introduction" class="scroll-target md:col-span-2 lg:col-span-3 section-card p-8 rounded-2xl fade-in-section">
-                <h2 class="text-3xl font-bold text-white mb-4">Introduction</h2>
-                <div class="text-gray-300 leading-relaxed space-y-4">
-                    <p>Hi! I'm Tirth Shah, a Python & AI/ML developer with a passion for building intelligent, scalable solutions. I specialize in AI-driven applications and web development, combining cutting-edge technologies like Generative AI and cloud architectures with a deep commitment to creating impactful, data-driven products.</p>
-                    <p>I'm always curious, always learning, and always building. From architecting RAG-based chatbots to automating complex data workflows, I enjoy the entire development lifecycle. When I'm not coding, you'll find me diving into the latest AI research, analyzing the stock market, or enjoying a game of cricket.</p>
+          </div>
+          
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-card-front"><h3 class="text-xl font-bold text-white">Fraud Detection System</h3></div>
+              <div class="project-card-back text-center">
+                <p class="text-gray-300">Developed a real-time fraud detection system using an XGBoost model. Trained on a Kaggle dataset, it leverages the Groq API for ultra-fast, AI-powered prediction of fraudulent transactions.</p>
+                <div class="flex justify-center gap-2 mt-4">
+                  <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">XGBoost</span>
+                  <span class="bg-purple-900 text-purple-300 text-xs font-semibold px-2.5 py-0.5 rounded">Groq</span>
+                  <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-0.5 rounded">Python</span>
                 </div>
+                <a href="https://github.com/tirth932/Fraud-Detection-System" target="_blank" class="mt-4 text-indigo-400 hover:text-indigo-300 transition flex items-center justify-center gap-2">View Code <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+              </div>
             </div>
+          </div>
 
-            <div id="education" class="scroll-target section-card p-8 rounded-2xl fade-in-section">
-                 <h2 class="text-3xl font-bold text-white mb-4">Education</h2>
-                 <div class="space-y-6">
-                     <div>
-                         <h3 class="font-semibold text-white">B.Tech, Computer Science</h3>
-                         <p class="text-gray-400">L.J. Institute of Engineering & Technology (2022-Present)</p>
-                         <p class="text-gray-500">CGPA: 8.75</p>
-                     </div>
-                     <div>
-                         <h3 class="font-semibold text-white">HSC</h3>
-                         <p class="text-gray-400">Nirman High School (2021-2022)</p>
-                          <p class="text-gray-500">72 percentile</p>
-                     </div>
-                      <div>
-                         <h3 class="font-semibold text-white">SSC</h3>
-                         <p class="text-gray-400">Nirman High School (2019-2020)</p>
-                         <p class="text-gray-500">91 percentile</p>
-                     </div>
-                 </div>
-            </div>
-
-            <div id="experience" class="scroll-target md:col-span-2 section-card p-8 rounded-2xl fade-in-section">
-                <h2 class="text-3xl font-bold text-white mb-4">Work Experience</h2>
-                 <div class="space-y-6">
-                     <div>
-                         <h3 class="font-semibold text-white text-lg">Python & AI/ML Developer</h3>
-                         <p class="text-gray-400">NicheTech Computer Solutions | Dec 2024 - Present</p>
-                         <ul class="list-disc list-inside mt-2 text-gray-300 space-y-2">
-                             <li>Spearheaded integration of OpenAI APIs to automate content summarization on Matrubharti, increasing content discovery by 30%.</li>
-                             <li>Engineered chatbot systems and interactive dashboards for Roastea, enhancing customer engagement by 40%.</li>
-                             <li>Architected and launched Trip Teller, a Django-based travel platform handling 5,000+ queries/month.  Enhanced its RAG-based chat functionality by developing an advanced itinerary-planning chatbot using Groq, FastAPI, Langchain, and Huggingface Transformers to provide AI-driven travel recommendations.</li>
-                             <li>Developed a web-scraping chatbot for the "Take Charge America" project to provide users with comprehensive information about the organization's services by extracting data directly from their website.</li>
-                             <li>Spearheaded the integration of OpenAI APIs to automate content summarization on Matrubharti, increasing content discovery by 30%. </li>
-                             <li>Automated PDF data ingestion to DynamoDB via AWS Lambda, reducing data processing time from hours to under 5 minutes. </li>
-                             <li>Developed BSG, a secure event management platform in Golang capable of supporting 300+ user registrations.</li>
-                             <li>Developed KeywordsClub, an SEO and content generation tool utilizing FastAPI and OpenAI. The application expands a single term into a comprehensive list of keywords and automates the creation of blog content to streamline marketing workflows.</li>
-                             <li>Built a proprietary web-scraping chatbot for NicheTech to serve as an internal knowledge base, automating information retrieval and providing employees with on-demand access to company-wide information.</li>
-                             <li>Engineered a specialized chatbot for Roastea's internal administrative and management teams by training a custom model to handle specific operational queries, improving internal workflow efficiency.</li>
-                         </ul>
-                     </div>
-                     <div>
-                         <h3 class="font-semibold text-white text-lg">AI Intern</h3>
-                         <p class="text-gray-400">Tally Prime | Jun 2024 - Aug 2024</p>
-                         <ul class="list-disc list-inside mt-2 text-gray-300 space-y-2">
-                             <li>Automated generation of 500+ training invoices with advanced Excel scripting, expediting data prep by 60%.</li>
-                             <li>Built modular Python tools to auto-populate invoice templates, cutting manual data entry by 90%.</li>
-                         </ul>
-                     </div>
-                 </div>
-            </div>
-
-            <div id="skills" class="scroll-target lg:col-span-3 section-card p-8 rounded-2xl fade-in-section">
-                <h2 class="text-3xl font-bold text-white mb-4">Technical Skills</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                    <div>
-                        <h3 class="font-semibold text-white mb-3">Languages & Frameworks</h3>
-                        <div class="flex flex-wrap gap-2">
-                             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#306998">Python</span>
-                             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#00ADD8">Golang</span>
-                             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#092E20">Django</span>
-                             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#009485">FastAPI</span>
-                             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#ffffff">Flask</span>
-                             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#F7DF1E">JavaScript</span>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-white mb-3">Tools & Platforms</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#FF9900">AWS</span>
-                            <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#f1502f">Git</span>
-                            <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#4DB33D">MongoDB</span>
-                            <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#336791">PostgreSQL</span>
-                            <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#00ff00">Groq</span>
-                             <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#7B46FF">n8n</span>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-white mb-3">Domains</h3>
-                        <div class="flex flex-wrap gap-2">
-                           <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#9C27B0">Generative AI</span>
-                           <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#F44336">Machine Learning</span>
-                           <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#4CAF50">OpenAI APIs</span>
-                           <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#4A148C">Deep Learning</span>
-                           <span class="skill-badge bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm" data-color="#00BCD4">IoT</span>
-                        </div>
-                    </div>
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-card-front"><h3 class="text-xl font-bold text-white text-center">Face Recognition System</h3></div>
+              <div class="project-card-back text-center">
+                <p class="text-gray-300">Built a serverless face recognition system leveraging AWS. The application uses S3 for storage, Lambda for processing, and Amazon Rekognition to identify faces in real-time.</p>
+                <div class="flex justify-center flex-wrap gap-2 mt-4">
+                  <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-0.5 rounded">AWS</span>
+                  <span class="bg-orange-900 text-orange-300 text-xs font-semibold px-2.5 py-0.5 rounded">Lambda</span>
+                  <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">Rekognition</span>
                 </div>
+              </div>
             </div>
-
-            <div id="projects" class="scroll-target lg:col-span-3 section-card p-8 rounded-2xl fade-in-section">
-                <h2 class="text-3xl font-bold text-white mb-6">Projects</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    
-                    <div class="project-card">
-                        <div class="project-card-inner">
-                            <div class="project-card-front"><h3 class="text-xl font-bold text-white">TechGroove</h3></div>
-                            <div class="project-card-back text-center">
-                                <p class="text-gray-300">A full-stack MERN e-commerce platform with dynamic cart, product management, and secure backend integration for a modern shopping experience.</p>
-                                <div class="flex justify-center gap-2 mt-4">
-                                    <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">React</span>
-                                    <span class="bg-green-900 text-green-300 text-xs font-semibold px-2.5 py-0.5 rounded">Node.js</span>
-                                </div>
-                                <a href="https://github.com/tirth932/TechGroove" target="_blank" class="mt-4 text-indigo-400 hover:text-indigo-300 transition flex items-center justify-center gap-2">View Code <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-card-inner">
-                            <div class="project-card-front"><h3 class="text-xl font-bold text-white">Digi Bank</h3></div>
-                            <div class="project-card-back text-center">
-                                <p class="text-gray-300">Full-stack banking app with Django and React for secure balance checks, loan applications, and service management with persistent data storage.</p>
-                                <div class="flex justify-center gap-2 mt-4">
-                                      <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">React</span>
-                                      <span class="bg-green-900 text-green-300 text-xs font-semibold px-2.5 py-0.5 rounded">Django</span>
-                                </div>
-                                <a href="https://github.com/tirth932/digibank" target="_blank" class="mt-4 text-indigo-400 hover:text-indigo-300 transition flex items-center justify-center gap-2">View Code <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card">
-                        <div class="project-card-inner">
-                            <div class="project-card-front"><h3 class="text-xl font-bold text-white">Fraud Detection System</h3></div>
-                            <div class="project-card-back text-center">
-                                <p class="text-gray-300">Developed a real-time fraud detection system using an XGBoost model. Trained on a Kaggle dataset, it leverages the Groq API for ultra-fast, AI-powered prediction of fraudulent transactions.</p>
-                                <div class="flex justify-center gap-2 mt-4">
-                                    <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">XGBoost</span>
-                                    <span class="bg-purple-900 text-purple-300 text-xs font-semibold px-2.5 py-0.5 rounded">Groq</span>
-                                    <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-0.5 rounded">Python</span>
-                                </div>
-                                <a href="https://github.com/tirth932/Fraud-Detection-System" target="_blank" class="mt-4 text-indigo-400 hover:text-indigo-300 transition flex items-center justify-center gap-2">View Code <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-card-inner">
-                            <div class="project-card-front"><h3 class="text-xl font-bold text-white text-center">Face Recognition System</h3></div>
-                            <div class="project-card-back text-center">
-                                <p class="text-gray-300">Built a serverless face recognition system leveraging AWS. The application uses S3 for storage, Lambda for processing, and Amazon Rekognition to identify faces in real-time.</p>
-                                <div class="flex justify-center flex-wrap gap-2 mt-4">
-                                    <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-0.5 rounded">AWS</span>
-                                    <span class="bg-orange-900 text-orange-300 text-xs font-semibold px-2.5 py-0.5 rounded">Lambda</span>
-                                    <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">Rekognition</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="project-card">
-                        <div class="project-card-inner">
-                            <div class="project-card-front"><h3 class="text-xl font-bold text-white text-center">E-Med</h3></div>
-                            <div class="project-card-back text-center">
-                                <p class="text-gray-300">A command-line medicine ordering system in Python, using NumPy and Pandas for data management to facilitate over 1,000 monthly transactions.</p>
-                                <div class="flex justify-center flex-wrap gap-2 mt-4">
-                                    <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-0.5 rounded">Python</span>
-                                    <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">NumPy</span>
-                                    <span class="bg-purple-900 text-purple-300 text-xs font-semibold px-2.5 py-0.5 rounded">Pandas</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card">
-                        <div class="project-card-inner">
-                            <div class="project-card-front"><h3 class="text-xl font-bold text-white text-center">Health Monitoring System</h3></div>
-                            <div class="project-card-back text-center">
-                                <p class="text-gray-300">IoT vitals tracker using Arduino to capture real-time health data (temperature, blood pressure), designed to reduce hospital overhead by 25%.</p>
-                                <div class="flex justify-center flex-wrap gap-2 mt-4">
-                                    <span class="bg-teal-900 text-teal-300 text-xs font-semibold px-2.5 py-0.5 rounded">IoT</span>
-                                    <span class="bg-cyan-900 text-cyan-300 text-xs font-semibold px-2.5 py-0.5 rounded">Arduino</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-card-inner">
-                            <div class="project-card-front"><h3 class="text-xl font-bold text-white text-center">Smart Agriculture</h3></div>
-                            <div class="project-card-back text-center">
-                                <p class="text-gray-300">A Random Forest model predicting optimal crops and soil quality by analyzing metrics like nitrogen and humidity for data-driven farming.</p>
-                                <div class="flex justify-center flex-wrap gap-2 mt-4">
-                                    <span class="bg-green-900 text-green-300 text-xs font-semibold px-2.5 py-0.5 rounded">Machine Learning</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+          </div>
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-card-front"><h3 class="text-xl font-bold text-white text-center">E-Med</h3></div>
+              <div class="project-card-back text-center">
+                <p class="text-gray-300">A command-line medicine ordering system in Python, using NumPy and Pandas for data management to facilitate over 1,000 monthly transactions.</p>
+                <div class="flex justify-center flex-wrap gap-2 mt-4">
+                  <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-0.5 rounded">Python</span>
+                  <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-0.5 rounded">NumPy</span>
+                  <span class="bg-purple-900 text-purple-300 text-xs font-semibold px-2.5 py-0.5 rounded">Pandas</span>
                 </div>
+              </div>
             </div>
-
-            <div id="certifications" class="scroll-target lg:col-span-3 section-card p-8 rounded-2xl fade-in-section">
-                <h2 class="text-3xl font-bold text-white mb-4">Certifications</h2>
-                <ul class="list-disc list-inside text-gray-300 space-y-2 columns-1 md:columns-2">
-                     <li>Building Generative AI-Powered Applications with Python - IBM</li>
-                     <li>AWS Cloud Technical Essential - Coursera</li>
-                     <li>Introduction to Artificial Intelligence - LinkedIn</li>
-                     <li>Introduction to Generative AI - Google</li>
-                     <li>Introduction to Large Language Models - Google</li>
-                     <li>Exploratory Data Analysis for Machine Learning - Coursera</li>
-                     <li>Inheritance and Data Structures in Java - Coursera</li>
-                     <li>Introduction to Java - Coursera</li>
-                     <li>HTML, CSS, and Javascript for Web Developers - Coursera</li>
-                     <li>Introduction to Responsible AI - Google</li>
-                     <li>Prompt Design in Vertex AI - Google</li>
-                     <li>Responsible AI: Applying AI Principles with Google Cloud - Google</li>
-                     <li>Codekaze-Sep'23 : Round 1 Naukri Engineers Week - Coding Ninjas</li>
-                </ul>
+          </div>
+          
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-card-front"><h3 class="text-xl font-bold text-white text-center">Health Monitoring System</h3></div>
+              <div class="project-card-back text-center">
+                <p class="text-gray-300">IoT vitals tracker using Arduino to capture real-time health data (temperature, blood pressure), designed to reduce hospital overhead by 25%.</p>
+                <div class="flex justify-center flex-wrap gap-2 mt-4">
+                  <span class="bg-teal-900 text-teal-300 text-xs font-semibold px-2.5 py-0.5 rounded">IoT</span>
+                  <span class="bg-cyan-900 text-cyan-300 text-xs font-semibold px-2.5 py-0.5 rounded">Arduino</span>
+                </div>
+              </div>
             </div>
+          </div>
 
-             <div id="contact" class="scroll-target lg:col-span-3 text-center mt-16 sm:mt-24 fade-in-section">
-                 <h2 class="text-4xl font-bold text-white mb-4">Get In Touch</h2>
-                 <p class="text-gray-400 max-w-2xl mx-auto mb-8">I'm currently seeking new opportunities and collaborations. If you have a project in mind or just want to connect, feel free to reach out.</p>
-                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=tirthshah29604@gmail.com" class="magnetic-button bg-indigo-600 text-white font-semibold px-10 py-4 rounded-lg hover:bg-indigo-500 transition-all duration-300 inline-block">
-                     Contact Me
-                 </a>
-             </div>
-        </main>
-    </div>
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-card-front"><h3 class="text-xl font-bold text-white text-center">Smart Agriculture</h3></div>
+              <div class="project-card-back text-center">
+                <p class="text-gray-300">A Random Forest model predicting optimal crops and soil quality by analyzing metrics like nitrogen and humidity for data-driven farming.</p>
+                <div class="flex justify-center flex-wrap gap-2 mt-4">
+                  <span class="bg-green-900 text-green-300 text-xs font-semibold px-2.5 py-0.5 rounded">Machine Learning</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- 0. Preloader ---
-        const preloader = document.getElementById('preloader');
-        window.addEventListener('load', () => {
-            preloader.classList.add('loaded');
-        });
+      <div id="certifications" class="scroll-target lg:col-span-3 section-card p-8 rounded-2xl fade-in-section">
+        <h2 class="text-3xl font-bold text-white mb-4">Certifications</h2>
+        <ul class="text-gray-300 space-y-2 columns-1 md:columns-2">
+          <li><a href="https://www.coursera.org/account/accomplishments/verify/2KFPU2NLDA67" target="_blank" class="cert-link">Building Generative AI-Powered Applications with Python - IBM</a></li>
+          <li><a href="https://www.coursera.org/account/accomplishments/verify/INHJ5ZO0LQ6M?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" target="_blank" class="cert-link">AWS Cloud Technical Essential - Coursera</a></li>
+          <li><a href="https://www.linkedin.com/learning/certificates/4c6db5ee0bee4ef1cffeb16303f72ade46471e09cc45c9fb8967d84adad57822?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_certifications_details%3B%2Ba2eAsPXQ%2BuCKvyWar10Ug%3D%3D" target="_blank" class="cert-link">Introduction to Artificial Intelligence - LinkedIn</a></li>
+          <li><a href="https://www.cloudskillsboost.google/public_profiles/2bbf1989-91b0-477c-b6ed-25c6dbfd8b99/badges/12677338?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="cert-link">Introduction to Generative AI - Google</a></li>
+          <li><a href="https://www.cloudskillsboost.google/public_profiles/2bbf1989-91b0-477c-b6ed-25c6dbfd8b99/badges/12677776?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="cert-link">Introduction to Large Language Models - Google</a></li>
+          <li><a href="https://www.linkedin.com/in/tirthshah2203/details/certifications/1729338633370/single-media-viewer/?profileId=ACoAAElVJvEBZ3b-AWoTy4eqOnUoP7sfDhIfmDA" target="_blank" class="cert-link">Exploratory Data Analysis for Machine Learning - Coursera</a></li>
+          <li><a href="https://www.linkedin.com/in/tirthshah2203/details/certifications/1729338546885/single-media-viewer/?profileId=ACoAAElVJvEBZ3b-AWoTy4eqOnUoP7sfDhIfmDA" target="_blank" class="cert-link">Inheritance and Data Structures in Java - Coursera</a></li>
+          <li><a href="https://www.linkedin.com/in/tirthshah2203/details/certifications/1729338592957/single-media-viewer/?profileId=ACoAAElVJvEBZ3b-AWoTy4eqOnUoP7sfDhIfmDA" target="_blank" class="cert-link">Introduction to Java - Coursera</a></li>
+          <li><a href="https://www.linkedin.com/in/tirthshah2203/details/certifications/1729338498185/single-media-viewer/?profileId=ACoAAElVJvEBZ3b-AWoTy4eqOnUoP7sfDhIfmDA" target="_blank" class="cert-link">HTML, CSS, and Javascript for Web Developers - Coursera</a></li>
+          <li><a href="https://www.cloudskillsboost.google/public_profiles/2bbf1989-91b0-477c-b6ed-25c6dbfd8b99/badges/12678080?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="cert-link">Introduction to Responsible AI - Google</a></li>
+          <li><a href="https://www.cloudskillsboost.google/public_profiles/2bbf1989-91b0-477c-b6ed-25c6dbfd8b99/badges/12699664?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="cert-link">Prompt Design in Vertex AI - Google</a></li>
+          <li><a href="https://www.cloudskillsboost.google/public_profiles/2bbf1989-91b0-477c-b6ed-25c6dbfd8b99/badges/12700002?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="cert-link">Responsible AI: Applying AI Principles with Google Cloud - Google</a></li>
+          <li><a href="https://www.linkedin.com/in/tirthshah2203/details/certifications/1735640168076/single-media-viewer/?profileId=ACoAAElVJvEBZ3b-AWoTy4eqOnUoP7sfDhIfmDA" target="_blank" class="cert-link">Codekaze-Sep'23 : Round 1 Naukri Engineers Week - Coding Ninjas</a></li>
+        </ul>
+      </div>
 
-        // --- 1. Enhanced Three.js background animation ---
-        let scene, camera, renderer, particles, particleVelocities;
-        const canvas = document.getElementById('bg-canvas');
-        const defaultColor = 0x00aaff;
-        let targetColor = new THREE.Color(defaultColor);
-        let colorTimeout;
-        const particleCount = 1000;
-        
-        function init3D() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
+      <div id="contact" class="scroll-target lg:col-span-3 text-center mt-16 sm:mt-24 fade-in-section">
+        <h2 class="text-4xl font-bold text-white mb-4">Get In Touch</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto mb-8">I'm currently seeking new opportunities and collaborations. If you have a project in mind or just want to connect, feel free to reach out.</p>
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=tirthshah29604@gmail.com" class="magnetic-button bg-indigo-600 text-white font-semibold px-10 py-4 rounded-lg hover:bg-indigo-500 transition-all duration-300 inline-block">
+          Contact Me
+        </a>
+      </div>
+    </main>
+  </div>
 
-            const particlesGeometry = new THREE.BufferGeometry();
-            const posArray = new Float32Array(particleCount * 3);
-            particleVelocities = new Float32Array(particleCount * 3);
-
-            for (let i = 0; i < particleCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 20;
-                particleVelocities[i] = (Math.random() - 0.5) * 0.005;
-            }
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-            const particlesMaterial = new THREE.PointsMaterial({
-                size: 0.012,
-                color: new THREE.Color(defaultColor),
-                transparent: true,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false
-            });
-
-            particles = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particles);
-            window.addEventListener('resize', onWindowResize, false);
-        }
-
-        let mouse = new THREE.Vector2();
-        document.addEventListener('mousemove', (event) => {
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        }, false);
-        
-        const clock = new THREE.Clock();
-        function animate() {
-            const elapsedTime = clock.getElapsedTime();
-            requestAnimationFrame(animate);
-            
-            // Particle color transition
-            particles.material.color.lerp(targetColor, 0.05);
-
-            // Dynamic particle movement
-            const positions = particles.geometry.attributes.position.array;
-            for (let i = 0; i < particleCount * 3; i += 3) {
-                positions[i] += particleVelocities[i];
-                positions[i+1] += particleVelocities[i+1];
-                positions[i+2] += particleVelocities[i+2];
-
-                // Wrap particles around
-                if (positions[i] > 10 || positions[i] < -10) particleVelocities[i] = -particleVelocities[i];
-                if (positions[i+1] > 10 || positions[i+1] < -10) particleVelocities[i+1] = -particleVelocities[i+1];
-                if (positions[i+2] > 10 || positions[i+2] < -10) particleVelocities[i+2] = -particleVelocities[i+2];
-            }
-            particles.geometry.attributes.position.needsUpdate = true;
-
-            // Scene rotation based on mouse
-            particles.rotation.y = elapsedTime * 0.02 + (mouse.x * 0.15);
-            particles.rotation.x = elapsedTime * 0.01 + (mouse.y * 0.15);
-            
-            renderer.render(scene, camera);
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        init3D();
-        animate();
-
-        // --- 2. Upgraded Cursor Logic ---
-        const cursorDot = document.getElementById('cursor-dot');
-        const cursorOrb = document.getElementById('cursor-orb');
-        let dotX = 0, dotY = 0, orbX = 0, orbY = 0;
-
-         window.addEventListener('mousemove', (e) => {
-            dotX = e.clientX;
-            dotY = e.clientY;
-            cursorDot.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
-        });
-
-        function animateCursor() {
-            orbX += (dotX - orbX) * 0.1;
-            orbY += (dotY - orbY) * 0.1;
-            cursorOrb.style.transform = `translate(calc(${orbX}px - 50%), calc(${orbY}px - 50%))`;
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-
-        const interactiveElements = document.querySelectorAll('a, button, .skill-badge, .project-card');
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => cursorOrb.classList.add('is-hovering'));
-            el.addEventListener('mouseleave', () => cursorOrb.classList.remove('is-hovering'));
-        });
-
-        // --- 3. Interactive Skills Logic ---
-        document.querySelectorAll('.skill-badge').forEach(badge => {
-            const color = badge.dataset.color;
-            badge.style.setProperty('--skill-color', color);
-            badge.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (color) {
-                    targetColor.set(color);
-                    if (colorTimeout) clearTimeout(colorTimeout);
-                    colorTimeout = setTimeout(() => {
-                        targetColor.set(defaultColor);
-                    }, 3000);
-                }
-            });
-        });
-
-        // --- 4. Staggered Scroll Animation Logic ---
-        const fadeInObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    fadeInObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.fade-in-section').forEach((section) => fadeInObserver.observe(section));
-
-        // --- 5. Typing Animation Logic ---
-        function typeWriter(element, text, speed, callback) {
-            let i = 0;
-            element.innerHTML = "";
-            element.classList.add('typing-cursor');
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                } else {
-                    element.classList.remove('typing-cursor');
-                    if (callback) callback();
-                }
-            }
-            type();
-        }
-
-        const mainHeading = document.getElementById('main-heading');
-        const subHeading = document.getElementById('sub-heading');
-        const mainText = "Tirth Shah";
-        const subText = "Python & AI/Machine Learning Developer";
-
-        // Delay typing until after preloader fades
-        setTimeout(() => {
-            typeWriter(mainHeading, mainText, 100, () => {
-                typeWriter(subHeading, subText, 50);
-            });
-        }, 1000);
-
-        // --- 6. 3D Card Tilt & Spotlight Effect ---
-        document.querySelectorAll('.section-card').forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const width = rect.width;
-                const height = rect.height;
-                const rotateX = (y / height - 0.5) * -15; 
-                const rotateY = (x / width - 0.5) * 15;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                card.style.setProperty('--px', x + 'px');
-                card.style.setProperty('--py', y + 'px');
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
-            });
-        });
-
-        // --- 7. Magnetic Button Effect ---
-        document.querySelectorAll('.magnetic-button').forEach(button => {
-            button.addEventListener('mousemove', function(e){
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                gsap.to(this, { x: x * 0.3, y: y * 0.3, duration: 0.5, ease: "power3.out" });
-            });
-            button.addEventListener('mouseleave', function(e){
-                gsap.to(this, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
-            });
-        });
-
-        // --- 8. 3D Hero Text Tilt ---
-        const heroHeader = document.getElementById('hero-header');
-        const heroContent = document.getElementById('hero-content');
-        heroHeader.addEventListener('mousemove', (e) => {
-            const rect = heroHeader.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const rotateX = (y / rect.height - 0.5) * -20;
-            const rotateY = (x / rect.width - 0.5) * 20;
-            gsap.to(heroContent, {
-                rotationX: rotateX,
-                rotationY: rotateY,
-                transformPerspective: 1000,
-                duration: 0.5,
-                ease: 'power2.out'
-            });
-        });
-        heroHeader.addEventListener('mouseleave', () => {
-            gsap.to(heroContent, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
-        });
-
-        // --- 9. Navbar & Scrollspy Logic ---
-        const navbar = document.getElementById('navbar');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const scrollTargets = document.querySelectorAll('.scroll-target');
-
-        // Navbar visibility
-        const navObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    navbar.classList.add('visible');
-                } else {
-                    navbar.classList.remove('visible');
-                }
-            });
-        }, { rootMargin: "-30% 0px -70% 0px" });
-        navObserver.observe(document.querySelector('.hero'));
-
-        // Scrollspy for active link
-        const scrollspyObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${id}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        }, { rootMargin: "-40% 0px -60% 0px" });
-        scrollTargets.forEach(target => scrollspyObserver.observe(target));
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // --- 0. Preloader ---
+    const preloader = document.getElementById('preloader');
+    window.addEventListener('load', () => {
+      preloader.classList.add('loaded');
     });
-    </script>
+
+    // --- 1. Enhanced Three.js background animation ---
+    let scene, camera, renderer, particles, particleVelocities;
+    const canvas = document.getElementById('bg-canvas');
+    const defaultColor = 0x00aaff;
+    let targetColor = new THREE.Color(defaultColor);
+    let colorTimeout;
+    const particleCount = 1000;
+    
+    function init3D() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 5;
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const particlesGeometry = new THREE.BufferGeometry();
+      const posArray = new Float32Array(particleCount * 3);
+      particleVelocities = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount * 3; i++) {
+        posArray[i] = (Math.random() - 0.5) * 20;
+        particleVelocities[i] = (Math.random() - 0.5) * 0.005;
+      }
+      particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+      const particlesMaterial = new THREE.PointsMaterial({
+        size: 0.012,
+        color: new THREE.Color(defaultColor),
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      particles = new THREE.Points(particlesGeometry, particlesMaterial);
+      scene.add(particles);
+      window.addEventListener('resize', onWindowResize, false);
+    }
+
+    let mouse = new THREE.Vector2();
+    document.addEventListener('mousemove', (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    }, false);
+    
+    const clock = new THREE.Clock();
+    function animate() {
+      const elapsedTime = clock.getElapsedTime();
+      requestAnimationFrame(animate);
+      
+      // Particle color transition
+      particles.material.color.lerp(targetColor, 0.05);
+
+      // Dynamic particle movement
+      const positions = particles.geometry.attributes.position.array;
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        positions[i] += particleVelocities[i];
+        positions[i+1] += particleVelocities[i+1];
+        positions[i+2] += particleVelocities[i+2];
+
+        // Wrap particles around
+        if (positions[i] > 10 || positions[i] < -10) particleVelocities[i] = -particleVelocities[i];
+        if (positions[i+1] > 10 || positions[i+1] < -10) particleVelocities[i+1] = -particleVelocities[i+1];
+        if (positions[i+2] > 10 || positions[i+2] < -10) particleVelocities[i+2] = -particleVelocities[i+2];
+      }
+      particles.geometry.attributes.position.needsUpdate = true;
+
+      // Scene rotation based on mouse
+      particles.rotation.y = elapsedTime * 0.02 + (mouse.x * 0.15);
+      particles.rotation.x = elapsedTime * 0.01 + (mouse.y * 0.15);
+      
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    init3D();
+    animate();
+
+    // --- 2. Upgraded Cursor Logic ---
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorOrb = document.getElementById('cursor-orb');
+    let dotX = 0, dotY = 0, orbX = 0, orbY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      dotX = e.clientX;
+      dotY = e.clientY;
+      cursorDot.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+    });
+
+    function animateCursor() {
+      orbX += (dotX - orbX) * 0.1;
+      orbY += (dotY - orbY) * 0.1;
+      cursorOrb.style.transform = `translate(calc(${orbX}px - 50%), calc(${orbY}px - 50%))`;
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    const interactiveElements = document.querySelectorAll('a, button, .skill-badge, .project-card, .cert-link');
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', () => cursorOrb.classList.add('is-hovering'));
+      el.addEventListener('mouseleave', () => cursorOrb.classList.remove('is-hovering'));
+    });
+
+    // --- 3. Interactive Skills Logic ---
+    document.querySelectorAll('.skill-badge').forEach(badge => {
+      const color = badge.dataset.color;
+      badge.style.setProperty('--skill-color', color);
+      badge.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (color) {
+          targetColor.set(color);
+          if (colorTimeout) clearTimeout(colorTimeout);
+          colorTimeout = setTimeout(() => {
+            targetColor.set(defaultColor);
+          }, 3000);
+        }
+      });
+    });
+
+    // --- 4. Staggered Scroll Animation Logic ---
+    const fadeInObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          fadeInObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in-section').forEach((section) => fadeInObserver.observe(section));
+
+    // --- 5. Typing Animation Logic ---
+    function typeWriter(element, text, speed, callback) {
+      let i = 0;
+      element.innerHTML = "";
+      element.classList.add('typing-cursor');
+      function type() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        } else {
+          element.classList.remove('typing-cursor');
+          if (callback) callback();
+        }
+      }
+      type();
+    }
+
+    const mainHeading = document.getElementById('main-heading');
+    const subHeading = document.getElementById('sub-heading');
+    const mainText = "Tirth Shah";
+    const subText = "Python & AI/Machine Learning Developer";
+
+    // Delay typing until after preloader fades
+    setTimeout(() => {
+      typeWriter(mainHeading, mainText, 100, () => {
+        typeWriter(subHeading, subText, 50);
+      });
+    }, 1000);
+
+    // --- 6. 3D Card Tilt & Spotlight Effect ---
+    document.querySelectorAll('.section-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const width = rect.width;
+        const height = rect.height;
+        const rotateX = (y / height - 0.5) * -15; 
+        const rotateY = (x / width - 0.5) * 15;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        card.style.setProperty('--px', x + 'px');
+        card.style.setProperty('--py', y + 'px');
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+      });
+    });
+
+    // --- 7. Magnetic Button Effect ---
+    document.querySelectorAll('.magnetic-button').forEach(button => {
+      button.addEventListener('mousemove', function(e){
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        gsap.to(this, { x: x * 0.3, y: y * 0.3, duration: 0.5, ease: "power3.out" });
+      });
+      button.addEventListener('mouseleave', function(e){
+        gsap.to(this, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+      });
+    });
+
+    // --- 8. 3D Hero Text Tilt ---
+    const heroHeader = document.getElementById('hero-header');
+    const heroContent = document.getElementById('hero-content');
+    heroHeader.addEventListener('mousemove', (e) => {
+      const rect = heroHeader.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const rotateX = (y / rect.height - 0.5) * -20;
+      const rotateY = (x / rect.width - 0.5) * 20;
+      gsap.to(heroContent, {
+        rotationX: rotateX,
+        rotationY: rotateY,
+        transformPerspective: 1000,
+        duration: 0.5,
+        ease: 'power2.out'
+      });
+    });
+    heroHeader.addEventListener('mouseleave', () => {
+      gsap.to(heroContent, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
+    });
+
+    // --- 9. Navbar & Scrollspy Logic ---
+    const navbar = document.getElementById('navbar');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const scrollTargets = document.querySelectorAll('.scroll-target');
+
+    // Navbar visibility
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          navbar.classList.add('visible');
+        } else {
+          navbar.classList.remove('visible');
+        }
+      });
+    }, { rootMargin: "-30% 0px -70% 0px" });
+    navObserver.observe(document.querySelector('.hero'));
+
+    // Scrollspy for active link
+    const scrollspyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }, { rootMargin: "-40% 0px -60% 0px" });
+    scrollTargets.forEach(target => scrollspyObserver.observe(target));
+  });
+  </script>
 </body>
 </html>
